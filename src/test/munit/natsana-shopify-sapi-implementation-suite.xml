@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="natsana-shopify-sapi-implementation-suite.xml" />
+	<munit:test name="invoke-get-checkouts-shopify-api-common-sub-flow-test" doc:id="5c83d719-3015-4ea7-9d81-70747b8d14ca" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Call shopify-sapi-common-sub-flow" doc:id="8afaf294-c2ee-44f5-b155-d2881bae6dcb" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a4174e02-c9b2-4af9-8cdb-9edfc929fb4d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[output application/java --- readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_variable_2.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock call shopify-sapi-common-sub-flow" doc:id="1542a6c1-478f-4ed6-9f4f-ccd3d1590040" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="5bc9d63e-407d-47c9-891b-ef885051b933" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_payload1.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_attributes1.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[output application/java --- readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_variable_4.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\mock_variable_5.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="43baa3f5-a582-45f3-bf4f-023ff83d2f4a" >
+				<munit:payload value="#[readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\set-event_variable_.dwl')]" />
+					<munit:variable key="info" value="#[output application/json --- readUrl('classpath://invokegetcheckoutsshopifyapicommonsubflowtest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to invoke-get-checkouts-shopify-api-common-sub-flow" doc:id="f1012167-a681-4718-986b-728fd37e3873" name="invoke-get-checkouts-shopify-api-common-sub-flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="98f20b66-d05a-4c59-89a0-74a96a59d01c" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import invokegetcheckoutsshopifyapicommonsubflowtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="invoke-get-products-shopify-api-common-sub-flow-test" doc:id="80e8dced-88ed-4ecb-9e23-dc602416d07e" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Call shopify-sapi-common-sub-flow" doc:id="f3f225ae-ef64-4bd0-aca1-533822a8165d" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="6dca64d1-f8e0-4c0d-869d-3203c1eeb448" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[output application/java --- readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_variable_2.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Call shopify-sapi-common-sub-flow" doc:id="debedfff-c2c8-441a-9ef3-db4ee5680552" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="b1c0b907-846a-460d-b3e6-7a529feed56a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_payload1.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_attributes1.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[output application/java --- readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_variable_4.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\mock_variable_5.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="bc75e54d-0cb0-4930-81a8-6a1fb03a3871" >
+				<munit:payload value="#[readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\set-event_variable_.dwl')]" />
+					<munit:variable key="info" value="#[output application/json --- readUrl('classpath://invokegetproductsshopifyapicommonsubflowtest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to invoke-get-products-shopify-api-common-sub-flow" doc:id="0b4758a9-ffec-4108-93f6-244a878f58d7" name="invoke-get-products-shopify-api-common-sub-flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="306ff93e-f094-49ac-952d-a8249fa4eb5a" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import invokegetproductsshopifyapicommonsubflowtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

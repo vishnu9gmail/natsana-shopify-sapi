@@ -1,0 +1,32 @@
+https:
+  private:
+    host: "0.0.0.0"
+    port: "8092"
+  listener:
+    basePath: "/*"
+    connIdleTimeOutInMs: "40000"
+    readTimeOutInMs: "30000" 
+  request:
+    connIdleTimeOutInMs: "30000"
+    maxConnections: "-1"
+    responseBufferSize: "1024"
+    responseTimeOutInMs: "300000"
+    
+natsana-shopify-sapi : 
+    api : 
+      version : "1.0.0"
+    
+shopify :
+   protocol : "HTTPS"
+   path:
+     products: "/admin/api/2024-01/products.json"
+     checkouts: "/admin/api/2024-01/checkouts.json"
+
+retry:
+  maxNumber: "5"
+  intervalInMs: "5000"   
+ 
+reconnection:
+  freequencyInMs: "5000"
+  frequencyInMs: "1000"
+  attempts: "5"  

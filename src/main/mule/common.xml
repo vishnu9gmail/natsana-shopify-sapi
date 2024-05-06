@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="shopify-sapi-common-sub-flow" doc:id="d36569a3-972d-4d27-b128-9e257b2b237a" >
+		<until-successful maxRetries="${retry.maxNumber}" doc:name="Until Successful" doc:id="c9be8436-af3d-4fc9-b93b-7c564fbf9dbb" millisBetweenRetries="${retry.intervalInMs}" >
+			<try doc:name="Try" doc:id="eaaca7d9-cef8-437a-8067-102023a52107" >
+				<http:request doc:name="Call to shopify" doc:id="d26d4cbb-f3ee-4651-87a6-a9323d0ac4d7" config-ref="Shopify_Common_HTTP_Request_configuration" path="#[vars.targetApiParams.path]" sendCorrelationId="ALWAYS" correlationId="#[vars.info.correlationId]" method="#[vars.targetApiParams.method]">
+					<http:headers ><![CDATA[#[vars.targetApiParams.headers default {}]]]></http:headers>
+					<http:uri-params ><![CDATA[#[vars.targetApiParams.uriParams default {}]]]></http:uri-params>
+					<http:query-params ><![CDATA[#[vars.targetApiParams.queryParams default {}]]]></http:query-params>
+				</http:request>
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="Error Propagate" doc:id="6d52fe22-e2bc-4c43-8c32-697bee7404f8" type="HTTP:CONNECTIVITY,HTTP:SERVICE_UNAVAILABLE,HTTP:TIMEOUT" >
+						<ee:transform doc:name="Set Error Details" doc:id="d73e0495-370b-491a-ae37-7cad737f7d63" >
+							<ee:message />
+							<ee:variables >
+								<ee:set-variable resource="dwl/captureErrorDetails.dwl" variableName="errorvar" />
+							</ee:variables>
+						</ee:transform>
+					</on-error-propagate>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a174c250-52df-4db0-86db-39ebedaba576" type="ANY" >
+						<ee:transform doc:name="Set Error Details" doc:id="8855d6ab-3be3-462d-8289-4bd92f0cf302" >
+							<ee:message />
+							<ee:variables >
+								<ee:set-variable resource="dwl/captureErrorDetails.dwl" variableName="errorvar" />
+							</ee:variables>
+						</ee:transform>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</until-successful>
+		<choice doc:name="Choice" doc:id="d26a98f8-93ce-4dae-9657-4f4d4f1a433e" >
+			<when expression="#[vars.errorvar != null]" >
+				<ee:transform doc:name="Transform Message" doc:id="a187820d-655d-4cbb-96d1-a9e49f168abd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.errorvar]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+		</choice>
+	</sub-flow>
+	
+</mule>

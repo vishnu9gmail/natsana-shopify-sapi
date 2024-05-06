@@ -1,0 +1,32 @@
+#%RAML 1.0 Trait
+usage: Apply this trait to enforce Client ID and secret
+
+
+headers:
+  client_id:
+    type: string
+    example: "a7418622452c458b8A4253918E344asdd"
+  client_secret:
+    type: string
+    example: "vnaeebc4328e42b78aa93b4350f0c6566"
+responses:
+  401:
+    headers:
+      Content-Type:
+        type: string
+        example: "application/json"
+    description: Unauthorized or invalid client application credentials
+    body:
+      application/json:
+        type: !include exchange_modules/75f6e0a4-0d0a-4491-8286-c723eb5c018c/error-data-type/1.0.0/error-data-type.raml
+        example: !include ../examples/Return401Example.json	  
+  500:
+    headers:
+      Content-Type:
+        type: string
+        example: "application/json"
+    description: Bad response from authorization server
+    body:
+      application/json:
+        type: !include exchange_modules/75f6e0a4-0d0a-4491-8286-c723eb5c018c/error-data-type/1.0.0/error-data-type.raml
+        example: !include ../examples/Return500Example.json	    

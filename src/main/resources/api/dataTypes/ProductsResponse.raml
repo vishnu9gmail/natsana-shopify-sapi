@@ -1,0 +1,173 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+  products: 
+    type: array
+    required: true
+    items:
+      properties:
+        id:
+          type: number
+          required: true
+        title:
+          type: string
+          required: true
+        body_html:
+          type: string  | nil
+          required: false
+        vendor:
+          type: string
+          required: true
+        created_at:
+          type: datetime
+          required: false
+        product_type:
+          type: string | nil
+          required: false
+        handle:
+          type: string | nil
+          required: false
+        updated_at:
+          type: datetime 
+          required: false
+        published_at:
+          type: datetime
+          required: false
+        template_suffix:
+          type: string |nil
+          required: false
+        published_scope:
+          type: string | nil
+          required: false
+        tags:
+          type: string | nil
+          required: false
+        status:
+          type: string | nil
+          required: false
+        admin_graphql_api_id:
+          type: string | nil
+          required: false
+        variants:
+          type: array 
+          required: false
+          items:
+            properties:
+              id:
+                type: number 
+                required: true
+              product_id:
+                type: number
+                required: true
+              title:
+                type: string
+                required: true
+              price:
+                type: string
+                required: true
+              sku:
+                type: string | nil
+                required: false
+              position:
+                type: number
+                required: false
+              inventory_policy:
+                type: string | nil
+                required: false
+              compare_at_price:
+                type: string | nil
+                required: false
+              fulfillment_service:
+                type: string | nil
+                required: false
+              inventory_management:
+                type: string | nil
+                required: false
+              option1:
+                type: string | nil
+                required: false
+              option2:
+                type: string | nil
+                required: false
+              option3:
+                type: string | nil
+                required: false
+              created_at:
+                type: datetime 
+                required: true
+              updated_at:
+                type: datetime
+                required: false
+              taxable:
+                type: boolean
+                required: false
+              barcode:
+                type: string | nil
+                required: false
+              grams:
+                type: number
+                required: false
+              weight:
+                type: number
+                required: false
+              weight_unit:
+                type: string | nil
+                required: false
+              inventory_item_id:
+                type: number
+                required: false
+              inventory_quantity:
+                type: number
+                required: false
+              old_inventory_quantity:
+                type: number
+                required: false
+              presentment_prices:
+                type: array
+                required: false
+                items:
+                  properties:
+                    price:
+                      type: object
+                      properties:
+                        amount:
+                          type: string | nil
+                          required: false
+                        currency_code:
+                          type: string | nil
+                          required: true
+                    compare_at_price:
+                      type: string | nil
+                      required: false
+              requires_shipping:
+                type: boolean
+                required: false
+              admin_graphql_api_id:
+                type: string
+                required: false
+              image_id:
+                type: string | nil
+                required: false
+        images:
+          type: array
+          required: false
+          items:
+            properties:
+              id:
+                type: number
+                required: true
+              src:
+                type: string | nil
+                required: false
+              variant_ids:
+                 type: array
+                 required: false
+
+        
+
+              
+              
+            
+     
+     

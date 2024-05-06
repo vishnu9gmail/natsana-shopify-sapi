@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="global_error_handlerError_Handler" doc:id="e141babb-c597-4b42-9728-859e7f22720c" >
+		 <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[import * from dw::core::Strings
+output application/json
+---
+{
+	"errorDetails" : {
+			errorCode: p('errorCodeMessage.apikit.badRequest.code'),
+			errorMessage: p('errorCodeMessage.apikit.badRequest.description'),
+			errorDescription: (error.detailedDescription default "")as String withMaxSize  500 default "",
+			failingComponentSource: error.failingComponent as String default "",
+			correlationId: vars.info.correlationId default "",
+			apiName: vars.info.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+{
+	"errorDetails" : {
+			errorCode: p('errorCodeMessage.apikit.notFound.code'),
+			errorMessage: p('errorCodeMessage.apikit.notFound.description'),
+			errorDescription: (error.detailedDescription default "")as String withMaxSize  500 default "",
+			failingComponentSource: error.failingComponent as String default "",
+			correlationId: vars.info.correlationId default "",
+			apiName: vars.info.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}
+]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+{
+	"errorDetails" : {
+			errorCode: p('errorCodeMessage.apikit.methodNotAllowed.code'),
+			errorMessage: p('errorCodeMessage.apikit.methodNotAllowed.description'),
+			errorDescription: (error.detailedDescription default "")as String withMaxSize  500 default "",
+			failingComponentSource: error.failingComponent as String default "",
+			correlationId: vars.info.correlationId default "",
+			apiName: vars.info.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+{
+	"errorDetails" : {
+			errorCode: p('errorCodeMessage.apikit.notAcceptable.code'),
+			errorMessage: p('errorCodeMessage.apikit.notAcceptable.description'),
+			errorDescription:(error.detailedDescription withMaxSize  500) default "",
+			failingComponentSource: error.failingComponent as String default "",
+			correlationId: vars.info.correlationId default "",
+			apiName: vars.info.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+{
+	"errorDetails" : {
+			errorCode: p('errorCodeMessage.apikit.unsupportedMediaType.code'),
+			errorMessage: p('errorCodeMessage.apikit.unsupportedMediaType.description'),
+			errorDescription: (error.detailedDescription withMaxSize  500) default "",
+ 			failingComponentSource: error.failingComponent as String default "",
+			correlationId: vars.info.correlationId default "",
+			apiName: vars.info.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform doc:name="Transform Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+{
+	"errorDetails" : {
+			errorCode: p('errorCodeMessage.apikit.notImplemented.code'),
+			errorMessage: p('errorCodeMessage.apikit.notImplemented.description'),
+			errorDescription: (error.detailedDescription withMaxSize  500) default "",
+			failingComponentSource: error.failingComponent as String default "",
+			correlationId: vars.info.correlationId default "",
+			apiName: vars.info.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="aaa3d36d-02a6-498d-9063-76ef534b83d5" type="HTTP:CONNECTIVITY" >
+			<ee:transform doc:name="DW Error Payload" doc:id="74607d2b-5820-4b62-9047-6807e9b6e3d7" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+ 
+{
+	"errorDetails" : {
+			errorCode:  (vars.errorvar.errorCode default "500") as String,
+			errorType: vars.errorvar.errorCodeSource default "",
+			errorMessage: (vars.errorvar.errorMessageSource  default "")as String withMaxSize  500 default "",
+			errorDescription: (vars.errorvar.errorDescriptionSource withMaxSize  500) default "",
+			failingComponent: vars.errorvar.failingComponentSource default "",
+			correlationId: vars.errorvar.correlationId default "",
+			apiName: vars.errorvar.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8eb101f0-7fa2-4945-b7be-15da41da0649" type="HTTP:FORBIDDEN" >
+			<ee:transform doc:name="DW Error Payload" doc:id="3259e4a8-591f-4dba-ae58-e73bbdd291cc" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+{
+	"errorDetails" : {
+			errorCode: p('errorCodeMessage.http.forbidden.code') ,
+			errorMessage: (error.errorMessage)as String withMaxSize  500 default p('errorCodeMessage.http.forbidden.description'),
+			errorDescription: (error.detailedDescription withMaxSize  500) default "",
+			failingComponentSource: error.failingComponent as String default "",
+			correlationId: vars.info.correlationId default "",
+			apiName: vars.info.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1d366365-79c9-476f-b599-d98c3ab25e48" type="HTTP:SERVICE_UNAVAILABLE" >
+			<ee:transform doc:name="DW Error Payload" doc:id="028eadd0-b443-4907-a8f1-768d782f7809" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+ 
+{
+	"errorDetails" : {
+			errorCode:  (vars.errorvar.errorCode default "500") as String,
+			errorType: vars.errorvar.errorCodeSource default "",
+			errorMessage: (vars.errorvar.errorMessageSource  default "")as String withMaxSize  500 default "",
+			errorDescription: (vars.errorvar.errorDescriptionSource withMaxSize  500) default "",
+			failingComponent: vars.errorvar.failingComponentSource default "",
+			correlationId: vars.errorvar.correlationId default "",
+			apiName: vars.errorvar.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a97d2b5a-db9e-4f47-aa60-3135c5f884cc" type="HTTP:TIMEOUT" >
+			<ee:transform doc:name="DW Error Payload" doc:id="a967b176-206f-4ac6-b350-ab2bd01a3d78" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+ 
+{
+	"errorDetails" : {
+			errorCode:  (vars.errorvar.errorCode default "500") as String,
+			errorType: vars.errorvar.errorCodeSource default "",
+			errorMessage: (vars.errorvar.errorMessageSource  default "")as String withMaxSize  500 default "",
+			errorDescription: (vars.errorvar.errorDescriptionSource withMaxSize  500) default "",
+			failingComponent: vars.errorvar.failingComponentSource default "",
+			correlationId: vars.errorvar.correlationId default "",
+			apiName: vars.errorvar.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="24607573-ca90-4dad-a498-5566ac89812a" type="HTTP:UNAUTHORIZED" when="MULE:UNKNOWN" >
+			<ee:transform doc:name="DW Error Payload" doc:id="72a91bb5-abff-4ed7-a8ee-816fd28614d8" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+{
+	"errorDetails" : {
+			errorCode: p('errorCodeMessage.http.unauthorized.code') ,
+			errorMessage:(error.errorMessage)as String withMaxSize  500 default p('errorCodeMessage.http.unauthorized.description'),
+			errorDescription:(error.detailedDescription withMaxSize  500) default "",
+			failingComponentSource: error.failingComponent as String default "",
+			correlationId: vars.info.correlationId default "",
+			apiName: vars.info.apiName default ""
+		},
+	("requestPayload" : payload default "" ) if((vars.info.reqPayload default "") != "false" )
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	
+</error-handler>
+
+</mule>

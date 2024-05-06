@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="invoke-get-checkouts-shopify-api-common-sub-flow" doc:id="543081ca-fcb8-4f73-8bcc-057a4fb7d6ab" >
+		<scatter-gather doc:name="Scatter-Gather" doc:id="d0241da1-c9d7-4315-830e-681f23f171ed" >
+			<route >
+				<logger level="INFO" doc:name="Received Request to Get Checkouts from NL Shopify" doc:id="b0bfaf6b-5c46-47bf-8f0d-26f6e37dd387" message='"---Shopify Sys API: Received Request to Get Checkouts from NL Shopify---"' />
+				<ee:transform doc:name="Set Target API Params" doc:id="8d2fbb2b-416a-4aae-ac91-fce3b4b95539" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="targetApiParams" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"method": "GET",
+	"path": p('shopify.path.checkouts'),
+	"host" : p('shopify.nl.name'),
+	"queryParams" : if(!isEmpty(attributes.queryParams)){
+	(limit : attributes.queryParams.limit)if(!isEmpty(attributes.queryParams.limit)),
+	(updated_at_min : attributes.queryParams.updated_at_min)if(!isEmpty(attributes.queryParams.updated_at_min)),
+	(updated_at_max : attributes.queryParams.updated_at_max)if(!isEmpty(attributes.queryParams.updated_at_max)),
+	(created_at_min : attributes.queryParams.created_at_min)if(!isEmpty(attributes.queryParams.created_at_min)),
+	(created_at_max : attributes.queryParams.created_at_max)if(!isEmpty(attributes.queryParams.created_at_max)),
+	(ids : attributes.queryParams.ids)if(!isEmpty(attributes.queryParams.ids))	
+	
+}else {},
+	"headers" : {
+	"X-Shopify-Access-Token" : Mule::p('secure::shopify.nl.accessToken')
+}
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<flow-ref doc:name="call shopify-sapi-common-sub-flow" doc:id="5bc9d63e-407d-47c9-891b-ef885051b933" name="shopify-sapi-common-sub-flow"/>
+				<logger level="INFO" doc:name="Received Request to Get Checkouts from NL Shopify1" doc:id="f18e858d-2d5b-401c-b460-f92807717d8b" message='"---Shopify Sys API: Request Processed sucessfully to Get Checkouts from NL Shopify---"' />
+			</route>
+			<route >
+				<logger level="INFO" doc:name="Received Request to Get Checkouts from NE Shopify" doc:id="d5ca8435-f1b4-4e17-96a6-284324d31d2b" message='"---Shopify Sys API: Received Request to Get Checkouts from NE Shopify---"' />
+				<ee:transform doc:name="Set Target API Params" doc:id="bc18a31a-7afd-433d-b7fc-044f27245b45">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="targetApiParams"><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"method": "GET",
+	"path": p('shopify.path.checkouts'),
+	"host" : p('shopify.ne.name'),
+	"queryParams" : if(!isEmpty(attributes.queryParams)){
+	(limit : attributes.queryParams.limit)if(!isEmpty(attributes.queryParams.limit)),
+	(updated_at_min : attributes.queryParams.updated_at_min)if(!isEmpty(attributes.queryParams.updated_at_min)),
+	(updated_at_max : attributes.queryParams.updated_at_max)if(!isEmpty(attributes.queryParams.updated_at_max)),
+	(created_at_min : attributes.queryParams.created_at_min)if(!isEmpty(attributes.queryParams.created_at_min)),
+	(created_at_max : attributes.queryParams.created_at_max)if(!isEmpty(attributes.queryParams.created_at_max)),
+	(ids : attributes.queryParams.ids)if(!isEmpty(attributes.queryParams.ids))	
+	
+}else {},
+	"headers" : {
+	"X-Shopify-Access-Token" : Mule::p('secure::shopify.ne.accessToken')
+}
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<flow-ref doc:name="Call shopify-sapi-common-sub-flow" doc:id="a4174e02-c9b2-4af9-8cdb-9edfc929fb4d" name="shopify-sapi-common-sub-flow"/>
+				<logger level="INFO" doc:name="Request Processed sucessfully to Get Checkouts from NE Shopify" doc:id="036ad102-e600-4a95-a925-5995ed80248d" message='"---Shopify Sys API: Request Processed sucessfully to Get Checkouts from NE Shopify---"' />
+			
+</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="a89bb2d0-2fa5-4a8d-833e-8753fa1cbf73" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var errorInfo = [NE : (if(isEmpty(payload[1].payload.checkouts)) payload[1].payload else {})] ++ [NL : (if(isEmpty(payload[0].payload.checkouts)) payload[0].payload.checkouts else {})]
+---
+{
+"checkouts" : ((if(!isEmpty(payload[1].payload.checkouts))(payload[1].payload.checkouts) else []) ++ (if(!isEmpty(payload[0].payload.checkouts))(payload[0].payload.checkouts) else [])),
+(errors : errorInfo) if(isEmpty(payload[1].payload.checkouts) or isEmpty(payload[0].payload.checkouts))
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="invoke-get-products-shopify-api-common-sub-flow" doc:id="ac413cfc-1d9d-4da9-86cd-a4ff9fa9294f" >
+		<scatter-gather doc:name="Scatter-Gather" doc:id="757e9666-9463-4981-b899-b85d7fbc9415" >
+			<route >
+				<logger level="INFO" doc:name="Received Request to Get Products from NL Shopify" doc:id="d1261aca-32ea-498b-8e2d-7797fcaa27cf" message='"---Shopify Sys API: Received Request to Get Products from NL Shopify---"'/>
+				<ee:transform doc:name="Set Target API Params" doc:id="b43a3258-39b7-4968-9bff-2acdb61717b9">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="targetApiParams"><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"method": "GET",
+	"path": p('shopify.path.products'),
+	"host" : p('shopify.nl.name'),
+	"queryParams" : if(!isEmpty(attributes.queryParams)){
+	(limit : attributes.queryParams.limit)if(!isEmpty(attributes.queryParams.limit)),
+	(updated_at_min : attributes.queryParams.updated_at_min)if(!isEmpty(attributes.queryParams.updated_at_min)),
+	(updated_at_max : attributes.queryParams.updated_at_max)if(!isEmpty(attributes.queryParams.updated_at_max)),
+	(created_at_min : attributes.queryParams.created_at_min)if(!isEmpty(attributes.queryParams.created_at_min)),
+	(created_at_max : attributes.queryParams.created_at_max)if(!isEmpty(attributes.queryParams.created_at_max)),
+	(ids : attributes.queryParams.ids)if(!isEmpty(attributes.queryParams.ids))	
+	
+}else {},
+	"headers" : {
+	"X-Shopify-Access-Token" : Mule::p('secure::shopify.nl.accessToken')
+}
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<flow-ref doc:name="Call shopify-sapi-common-sub-flow" doc:id="b1c0b907-846a-460d-b3e6-7a529feed56a" name="shopify-sapi-common-sub-flow" />
+				<logger level="INFO" doc:name="Received Request to Get Products from NL Shopify" doc:id="bdef65d9-c5ef-432c-b7d7-d19a728a218e" message='"---Shopify Sys API: Request Processed sucessfully to Get Products from NL Shopify---"'/>
+			
+</route>
+			<route >
+				<logger level="INFO" doc:name="Received Request to Get Products from NE Shopify" doc:id="886b7d65-51c7-4376-a0aa-c76e704e8fa3" message='"---Shopify Sys API: Received Request to Get Products from NE Shopify---"'/>
+				<ee:transform doc:name="Set Target API Params" doc:id="f7b684ed-d360-4417-8a8d-df12e42f419f">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="targetApiParams"><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"method": "GET",
+	"path": p('shopify.path.products'),
+	"host" : p('shopify.ne.name'),
+	"queryParams" : if(!isEmpty(attributes.queryParams)){
+	(limit : attributes.queryParams.limit)if(!isEmpty(attributes.queryParams.limit)),
+	(updated_at_min : attributes.queryParams.updated_at_min)if(!isEmpty(attributes.queryParams.updated_at_min)),
+	(updated_at_max : attributes.queryParams.updated_at_max)if(!isEmpty(attributes.queryParams.updated_at_max)),
+	(created_at_min : attributes.queryParams.created_at_min)if(!isEmpty(attributes.queryParams.created_at_min)),
+	(created_at_max : attributes.queryParams.created_at_max)if(!isEmpty(attributes.queryParams.created_at_max)),
+	(ids : attributes.queryParams.ids)if(!isEmpty(attributes.queryParams.ids))	
+	
+}else {},
+	"headers" : {
+	"X-Shopify-Access-Token" : Mule::p('secure::shopify.ne.accessToken')
+}
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<flow-ref doc:name="Call shopify-sapi-common-sub-flow" doc:id="6dca64d1-f8e0-4c0d-869d-3203c1eeb448" name="shopify-sapi-common-sub-flow" />
+				<logger level="INFO" doc:name="Request Processed sucessfully to Get Products from NE Shopify" doc:id="341d91a3-cf00-4280-a1d6-6b1b27f8e4bc" message='"---Shopify Sys API: Request Processed sucessfully to Get Products from NE Shopify---"'/>
+			
+</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="7e602fc6-d479-40f4-bf65-1effede98b86" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var errorInfo = [NE : (if(isEmpty(payload[1].payload.products)) payload[1].payload else {})] ++ [NL : (if(isEmpty(payload[0].payload.products)) payload[0].payload else {})]
+---
+{
+"products" : ((if(!isEmpty(payload[1].payload.products))(payload[1].payload.products) map {
+     ( ($ -- ["options","image","images"]) ++ {"images" : ((($).images) map {
+    (($) -- ["alt","position","created_at","updated_at","admin_graphql_api_id","width","height","product_id"])
+})})
+} else []) ++ (if(!isEmpty(payload[0].payload.products))(payload[0].payload.products) map {
+     ( ($ -- ["options","image","images"]) ++ {"images" : ((($).images) map {
+    (($) -- ["alt","position","created_at","updated_at","admin_graphql_api_id","width","height","product_id"])
+})})
+}else [])),
+(errors : errorInfo) if(isEmpty(payload[1].payload.products) or isEmpty(payload[0].payload.products))
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	
+</mule>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <http:listener-config name="natsana-shopify-sapi-httpListenerConfig">
+        <http:listener-connection host="localhost" port="8081" />
+    </http:listener-config>
+    <apikit:config name="natsana-shopify-sapi-config" api="natsana-shopify-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="natsana-shopify-sapi-main">
+        <http:listener config-ref="natsana-shopify-sapi-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <ee:transform doc:name="Set Generic Details" doc:id="ed49b046-79cc-428a-9c19-0cef720e562e">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="info"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	correlationId: correlationId default "",
+	apiName: app.name,
+	apiVersion: p('natsana-shopify-sapi.api.version'),
+	orgPayload: payload default "",
+	requestPath: attributes.requestPath default ""
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Initial Logger" doc:id="19899d3f-7e73-4109-9710-d705d600f0f0" message="#[vars.info]"/>
+		<apikit:router config-ref="natsana-shopify-sapi-config" doc:id="240aca92-88b0-4377-a7f1-10529fe46f5a"/>
+		<error-handler ref="global_error_handlerError_Handler" />
+    </flow>
+    <flow name="get:\products:natsana-shopify-sapi-config">
+        <logger level="INFO" message="&quot;---Shopify Sys API: Received Request to Get Products from Shopify---&quot;" doc:name="LOG INFO Request Received" />
+        <flow-ref doc:name="Flow Reference to invoke-get-products-shopify-api-common-sub-flow" doc:id="05b28087-600e-47f0-941e-848e75b401cb" name="invoke-get-products-shopify-api-common-sub-flow" />
+        <logger level="INFO" doc:name="LOG INFO Exit" doc:id="373e87a1-6237-4552-86a6-06207bd2c0fa" message="&quot;---Shopify Sys API: Received Request to Get Products from Shopify---&quot;" />
+    </flow>
+    <flow name="get:\healthCheck:natsana-shopify-sapi-config">
+        <ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  name: p('healthCheck.name'),
+  tier: p('healthCheck.tier'),
+  status: p('healthCheck.status'),
+  timestamp: now(),
+  hostname: p('env'),
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\checkouts:natsana-shopify-sapi-config">
+		<logger level="INFO" doc:name="LOG INFO Request Received" doc:id="f31bd7db-6444-4a35-b37c-3c2639179416" message='"---Shopify Sys API: Received Request to Get Checkouts from Shopify---"' />
+		<flow-ref doc:name="Flow Reference to invoke-get-products-shopify-api-common-sub-flow" doc:id="cb24f660-3fff-4cae-b824-769d377227f9" name="invoke-get-checkouts-shopify-api-common-sub-flow" />
+		<logger level="INFO" doc:name="LOG INFO Exit" doc:id="3ffa6513-7d7f-489f-8960-08060d0ad07a" message='"---Shopify Sys API: Received Request to Get Checkouts from Shopify---"' />
+    </flow>
+</mule>

@@ -1,0 +1,422 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+  checkouts:
+    type: array
+    required: true
+    items:
+      properties:
+        buyer_accepts_marketing:
+          type: boolean
+          required: false
+        cart_token:
+          type: string
+          required: true
+        closed_at:
+          type: datetime
+          required: false
+        completed_at:
+          type: datetime
+          required: true
+        created_at:
+          type: datetime
+          required: false
+        currency:
+          type: string | nil
+          required: false
+        presentment_currency:
+          type: string | nil
+          required: false
+        customer_locale:
+          type: string | nil
+          required: false
+        device_id:
+          type: string | nil
+          required: false
+        email:
+          type: string |nil
+          required: false
+        gateway:
+          type: string | nil
+          required: false
+        id:
+          type: number
+          required: true
+        landing_site:
+          type: string | nil
+          required: false
+        location_id:
+          type: string | nil
+          required: false
+        note:
+          type: string | nil
+          required: false
+        note_attributes:
+          type: array
+          required: false
+        phone:
+          type: number
+          required: false
+        referring_site:
+          type: string | nil
+          required: false
+        source_identifier:
+          type: string | nil
+          required: false
+        source_url:
+          type: string | nil
+          required: false
+        taxes_included:
+          type: string | nil
+          required: false
+        token:
+          type: string | nil
+          required: false
+        total_weight:
+          type: number
+          required: false
+        updated_at:
+          type: datetime
+          required: false
+        user_id:
+          type: number
+          required: false
+        customer:
+          type: array
+          required: false
+          items:
+            properties:
+              id:
+                type: number
+                required: false
+              email:
+                type: string | nil
+                required: false
+              created_at:
+                type: datetime
+                required: false
+              updated_at:
+                type: datetime
+                required: false
+              first_name:
+                type: string | nil
+                required: false
+              last_name:
+                type: string | nil
+                required: false
+              orders_count:
+                type: number
+                required: false
+              state:
+                type: string | nil
+                required: false
+              total_spent:
+                type: number
+                required: false
+              last_order_id:
+                type: number
+                required: false
+              note:
+                type: string | nil
+                required: false
+              verified_email:
+                type: boolean
+                required: false
+              multipass_identifier:
+                type: string | nil
+                required: false
+              tax_exempt:
+                type: boolean
+                required: false
+              tags:
+                type: string | nil
+                required: false
+              last_order_name:
+                type: string | nil
+                required: false
+              currency:
+                type: string | nil
+                required: false
+              phone:
+                type: number
+                required: false
+              tax_exemptions:
+                type: string | nil
+                required: false
+              email_marketing_consent:
+                type: array
+                required: false
+                items:
+                  properties:
+                    state:
+                      type: string | nil
+                      required: false
+                    opt_in_level:
+                      type: string | nil
+                      required: false
+                    consent_updated_at:
+                      type: string | nil
+                      required: false
+              sms_marketing_consent:
+                type: string | nil
+                required: false
+              admin_graphql_api_id:
+                type: string | nil
+                required: false
+              default_address:
+                type: array
+                required: false
+                items:
+                  properties:
+                    id:
+                      type: number
+                      required: false
+                    customer_id:
+                      type: number
+                      required: false
+                    first_name:
+                      type: string | nil
+                      required: false
+                    last_name:
+                      type: string | nil
+                      required: false
+                    company:
+                      type: string | nil
+                      required: false
+                    address1:
+                      type: string | nil
+                      required: false
+                    address2:
+                      type: string | nil
+                      required: false
+                    city:
+                      type: string | nil
+                      required: false
+                    province:
+                      type: string | nil
+                      required: false
+                    country:
+                      type: string | nil
+                      required: false
+                    zip:
+                      type: string | nil
+                      required: false
+                    phone:
+                      type: number
+                      required: false
+                    name:
+                      type: string | nil
+                      required: false
+                    province_code:
+                      type: string | nil
+                      required: false
+                    country_code:
+                      type: string | nil
+                      required: false
+                    country_name:
+                      type: string | nil
+                      required: false
+                    default:
+                      type: boolean
+                      required: false
+        source:
+          type: string | nil
+          required: false
+        source_name:
+          type: string | nil
+          required: false
+        name:
+          type: string | nil
+          required: false
+        discount_codes:
+          type: array
+          required: false
+        total_discounts:
+          type: string | nil
+          required: false
+        total_line_items_price:
+          type: string | nil
+          required: false
+        total_price:
+          type: number
+          required: false
+        total_tax:
+          type: string | nil
+          required: false
+        subtotal_price:
+          type: string | nil
+          required: false
+        total_duties:
+          type: string | nil
+          required: false
+        abandoned_checkout_url:
+          type: string | nil
+          required: false
+        shipping_lines:
+          type: array
+          required: false
+        tax_lines:
+          type: array
+          required: false
+          items:
+            properties:
+              position:
+                type: string | nil
+                required: false
+              price:
+                type: number
+                required: false
+              rate:
+                type: number
+                required: false
+              title:
+                type: string | nil
+                required: false
+              source:
+                type: string | nil
+                required: false
+              compare_at:
+                type: string | nil
+                required: false
+              zone:
+                type: string | nil
+                required: false
+              channel_liable:
+                type: boolean
+                required: false
+              identifier:
+                type: string | nil
+                required: false
+        shipping_address:
+          type: string | nil
+          required: false
+        billing_address:
+          type: string | nil
+          required: false
+        line_items:
+          type: array
+          required: false
+          items:
+            properties:
+              key:
+                type: string | nil
+                required: false
+              destination_location_id:
+                type: string | nil
+                required: false
+              fulfillment_service:
+                type: string | nil
+                required: false
+              gift_card:
+                type: string | nil
+                required: false
+              grams:
+                type: string | nil
+                required: false
+              origin_location_id:
+                type: string | nil
+                required: false
+              presentment_title:
+                type: string | nil
+                required: false
+              presentment_variant_title:
+                type: string | nil
+                required: false
+              product_id:
+                type: number
+                required: false
+              properties:
+                type: array
+                required: false
+              quantity:
+                type: number
+                required: false
+              requires_shipping:
+                type: boolean
+                required: false
+              sku:
+                type: number
+                required: false
+              taxable:
+                type: boolean
+                required: false
+              title:
+                type: string | nil
+                required: false
+              variant_id:
+                type: number
+                required: false
+              variant_title:
+                type: string | nil
+                required: false
+              variant_price:
+                type: number
+                required: false
+              vendor:
+                type: string | nil
+                required: false
+              unit_price_measurement:
+                type: array
+                required: false
+                items:
+                  properties:
+                    measured_type:
+                      type: string | nil
+                      required: false
+                    quantity_value:
+                      type: number
+                      required: false
+                    quantity_unit:
+                      type: number
+                      required: false
+                    reference_value:
+                      type: number
+                      required: false
+                    reference_unit:
+                      type: string | nil
+                      required: false
+              rank:
+                type: string | nil
+                required: false
+              line_price:
+                type: number
+                required: false
+              price:
+                type: number
+                required: false
+              applied_discounts:
+                type: array
+                required: false
+              tax_lines:
+                type: array
+                required: false
+                items:
+                  properties:
+                    position:
+                      type: number
+                      required: false
+                    price:
+                      type: number
+                      required: false
+                    rate:
+                      type: number
+                      required: false
+                    title:
+                      type: string | nil
+                      required: false
+                    source:
+                      type: string | nil
+                      required: false
+                    zone:
+                      type: string | nil
+                      required: false
+                    compare_at:
+                      type: string | nil
+                      required: false
+                    channel_liable:
+                      type: string | nil
+                      required: false
+                    identifier:
+                      type: string | nil
+                      required: false
