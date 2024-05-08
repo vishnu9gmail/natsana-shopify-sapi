@@ -50,7 +50,7 @@
 						<applicationName>${app.name}</applicationName>
 						<environment>${env}</environment>
 						<workerType>MICRO</workerType>
-						<region>EU</region>
+						<region>eu-central-1</region>
 						<workers>1</workers>
 						<objectStoreV2>true</objectStoreV2>
 						<!-- Start: SECURED PROPERTIES CI/CD -->
