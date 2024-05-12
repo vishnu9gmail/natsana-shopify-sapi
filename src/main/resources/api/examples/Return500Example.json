@@ -1,6 +1,0 @@
-{
-  "errorCode": "500",
-  "errorMessage": "Internal Server Error",
-  "errorDescription": "The server was unable to process the request due to an internal error",
-  "correlationId": "dd960082-abbf-47c2-8c65-f18eeb35848b"
-}

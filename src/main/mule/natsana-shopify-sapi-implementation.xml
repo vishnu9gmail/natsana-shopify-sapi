@@ -155,19 +155,31 @@ output application/java
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 var errorInfo = [NE : (if(isEmpty(payload[1].payload.products)) payload[1].payload else {})] ++ [NL : (if(isEmpty(payload[0].payload.products)) payload[0].payload else {})]
+fun productsVariant(products) = variants: products.variants  map ((item, index) -> {
+    "title" : products.title,
+    "vendor" : products.vendor,
+    "type" : products.product_type,
+    "body_html" : products.body_html,
+    "status" : products.status,
+    "tags": products.tags,
+    "variant_title" : item.title,
+    "sku": item.sku,
+    "range":item.option1,
+    "ingredients":"",
+    "weight": item.weight,
+    "weight_unit": item.weight_unit,
+    "inventory": 5918,
+   
+    "compare_at_price": item.compare_at_price,
+    "image_src": (products.images filter ((item1, index1) ->item1.variant_ids contains  item.id )).src[0]
+}) 
 ---
-{
-"products" : ((if(!isEmpty(payload[1].payload.products))(payload[1].payload.products) map {
-     ( ($ -- ["options","image","images"]) ++ {"images" : ((($).images) map {
-    (($) -- ["alt","position","created_at","updated_at","admin_graphql_api_id","width","height","product_id"])
-})})
-} else []) ++ (if(!isEmpty(payload[0].payload.products))(payload[0].payload.products) map {
-     ( ($ -- ["options","image","images"]) ++ {"images" : ((($).images) map {
-    (($) -- ["alt","position","created_at","updated_at","admin_graphql_api_id","width","height","product_id"])
-})})
-}else [])),
-(errors : errorInfo) if(isEmpty(payload[1].payload.products) or isEmpty(payload[0].payload.products))
-}]]></ee:set-payload>
+flatten([((if(!isEmpty(payload[0].payload.products)) (flatten((payload[0].payload.products map ((item, index) -> {
+    (productsVariant((item)))
+})).variants))  else []) ++ (if(!isEmpty(payload[1].payload.products)) (flatten((payload[1].payload.products map ((item, index) -> {
+    (productsVariant((item)))
+})).variants)) else [])),
+(errors : errorInfo) if(isEmpty(payload[1].payload.products) or isEmpty(payload[0].payload.products))])]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>

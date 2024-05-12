@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
 	<configuration-properties doc:name="Configuration properties" doc:id="8a42a553-062f-46b9-9b4d-d487a98dad97" file="properties/${env}-properties.yaml" />
@@ -16,5 +18,8 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 	<global-property doc:name="Global Property" doc:id="1ee61064-eb32-4fa6-8bfa-3ece38493b66" name="secureKey" value="salesforce#*1234" />
 	<configuration doc:name="Configuration" doc:id="6c26a04b-608b-419d-9eda-6198f0dd6f61" defaultErrorHandler-ref="global_error_handlerError_Handler" />
 	<configuration-properties doc:name="Configuration properties" doc:id="cb819175-0308-408b-abbc-e69e09295972" file="properties\error-handler-properties.yaml" />
-	
+	<http:listener-config name="natsana-shopify-sapi-httpListenerConfig">
+        <http:listener-connection host="localhost" port="8081" />
+    </http:listener-config>
+    <apikit:config name="natsana-shopify-sapi-config" api="resource::75f6e0a4-0d0a-4491-8286-c723eb5c018c:natsana-shopify-sapi:1.0.3:raml:zip:natsana-shopify-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 </mule>

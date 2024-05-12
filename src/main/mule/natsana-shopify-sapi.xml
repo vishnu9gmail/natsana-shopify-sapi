@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <http:listener-config name="natsana-shopify-sapi-httpListenerConfig">
-        <http:listener-connection host="localhost" port="8081" />
-    </http:listener-config>
-    <apikit:config name="natsana-shopify-sapi-config" api="natsana-shopify-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+   
     <flow name="natsana-shopify-sapi-main">
         <http:listener config-ref="natsana-shopify-sapi-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -30,7 +27,7 @@ output application/json
 			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="Initial Logger" doc:id="19899d3f-7e73-4109-9710-d705d600f0f0" message="#[vars.info]"/>
-		<apikit:router config-ref="natsana-shopify-sapi-config" doc:id="240aca92-88b0-4377-a7f1-10529fe46f5a"/>
+		<apikit:router doc:name="APIkit Router" doc:id="7e22d266-11d9-4ef0-a3d7-813d1182fd87" config-ref="natsana-shopify-sapi-config" />
 		<error-handler ref="global_error_handlerError_Handler" />
     </flow>
     <flow name="get:\products:natsana-shopify-sapi-config">
