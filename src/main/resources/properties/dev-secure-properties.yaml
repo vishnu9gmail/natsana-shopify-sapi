@@ -1,5 +1,12 @@
 shopify:
     ne:
-      accessToken: "![DCXZWKWaQkWUKwEttNCqOULr+NvUC29+LpXgHlnct0k7tOIVwUs4Ijz2ATnxc8tN]"
+      accessToken: "![01UH/XuhHiIkDUN6SXBqyOgnR1CZl19BaWQBdSQ6jyNUqvWxCBphCw==]"
     nl:
-      accessToken: "![y49tqDAMWplY4IGDHEw+3+4zwZGho3jy0BRwZ4CSJQZG0Rmi6zc5bjC/uOKEfqSd]"
+      accessToken: "![nb4dv1bJlInTeWDO627w65nwGBgFkk/ZyCHRzRKxT9d5tIZGVmladQ==]"
+
+keystore:
+  type: "![RIi1RC/m0kE=]"
+  path: "![em+F6C3fc8ZoRuS1cVyIEQ==]"
+  alias: "![EtbzAVgJ3es=]"
+  key-password: "![zn/PJst0eldUQcIhkR1d5hGbDpMtzcx2deZFDZis5yTf58lipAOqnXJo/O84e+rW]"
+  store-password: "![hxrXLCw0Bszz0Mx4jRXLGw0GX+7ifk6LDOS/Q6qgMxfd3BIv+y5/fpQh7zG/zOTO]"

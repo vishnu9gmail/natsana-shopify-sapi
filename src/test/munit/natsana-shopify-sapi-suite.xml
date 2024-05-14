@@ -8,39 +8,6 @@
 		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
 		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
 	<munit:config name="natsana-shopify-sapi-suite.xml" />
-	<munit:test name="natsana-shopify-sapi-main-test" doc:id="d7b6823e-8e68-412c-8d0d-406e82102b18" >
-		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="f6cf279b-b6f6-46f9-84e5-56b08cb35eeb" processor="apikit:router">
-				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
-				</munit-tools:with-attributes>
-				<munit-tools:then-return >
-					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://natsanashopifysapimaintest\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
-					<munit-tools:variables >
-						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest\mock_variable_.dwl')]" />
-						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest\mock_variable_1.dwl')]" />
-						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest\mock_variable_2.dwl')]" />
-						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
-					</munit-tools:variables>
-				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="22164b78-6012-45f0-ab74-d9f57d8b85b0" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
-			</munit:set-event>
-		</munit:behavior>
-		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="24b8d2dd-b7e0-4a09-92e9-ec8e05ba6f93" name="natsana-shopify-sapi-main"/>
-		</munit:execution>
-		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="3168b576-cf54-4182-97e3-0934d043143c" message="The payload does not match">
-				<munit-tools:that ><![CDATA[#[%dw 2.0
-import natsanashopifysapimaintest::assert_expression_payload
----
-assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
-			</munit-tools:assert>
-		</munit:validation>
-	</munit:test>
 	<munit:test name="get:\products:natsana-shopify-sapi-config-test" doc:id="72346736-b7e6-47c4-a1e6-77bb7eaed7e2" >
 		<munit:behavior >
 			<munit-tools:mock-when doc:name="Mock Flow Reference to invoke-get-products-shopify-api-common-sub-flow" doc:id="ea0ed0a2-d515-4fa0-be94-790686a9ebbe" processor="flow-ref">
@@ -66,7 +33,7 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to get:\products:natsana-shopify-sapi-config" doc:id="68355863-f1d1-45dd-98a3-12c95a3c9818" name="get:\products:natsana-shopify-sapi-config"/>
+			<flow-ref doc:name="Flow-ref to get:\products:natsana-shopify-sapi-config" doc:id="68355863-f1d1-45dd-98a3-12c95a3c9818" name="get:\product:natsana-shopify-sapi-config"/>
 		</munit:execution>
 		<munit:validation >
 			<munit-tools:assert doc:name="Assert payload" doc:id="ecbc5062-e32a-4395-a09f-7329fc3564f5" message="The payload does not match">
@@ -102,7 +69,7 @@ assert_expression_payload::main({payload: payload, attributes: attributes, vars:
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to get:\checkouts:natsana-shopify-sapi-config" doc:id="83851652-937f-4930-af6a-2960ddc5da70" name="get:\checkouts:natsana-shopify-sapi-config"/>
+			<flow-ref doc:name="Flow-ref to get:\checkouts:natsana-shopify-sapi-config" doc:id="83851652-937f-4930-af6a-2960ddc5da70" name="get:\checkout:natsana-shopify-sapi-config"/>
 		</munit:execution>
 		<munit:validation >
 			<munit-tools:assert doc:name="Assert payload" doc:id="a6d15131-c862-402f-b69f-386cf548dee6" message="The payload does not match">
@@ -136,245 +103,403 @@ assert_expression_payload::main({payload: ((payload - 'timestamp') ++ {"timestam
 			</munit-tools:assert>
 		</munit:validation>
 	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-bad-request" doc:id="fc1ffbd6-5830-44bb-9efd-003b43573322" expectedErrorType="APIKIT:BAD_REQUEST">
+	<munit:test name="natsana-shopify-sapi-main-test" doc:id="0262ad5d-ba17-4c7a-b6c7-84ff6869c93b" >
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="3733e32c-058e-4496-99e2-6b1802660148" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="3eba4ce2-360b-46d7-af0b-26f6c5caefb3" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://natsanashopifysapimaintest1\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="edc99e29-6ce5-465a-b81d-b6a8be791ccd" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="c062b79e-cfbf-49c8-9da2-25acd1ba52eb" name="natsana-shopify-sapi-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="f20772a2-0151-4076-a7cb-039a343c9b52" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="natsana-shopify-sapi-main-test-badrequest" doc:id="bb84cf16-90f1-4411-abaf-efb84a7818b6" expectedErrorType="APIKIT:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="6f6f95a7-a90a-4ac7-ad47-c9203b737726" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="fac2326e-c203-4299-854d-6e715e3dcd0e" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="5cf6480e-6d12-44b2-b877-6c3dfd853a7a" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="ca789952-8630-46a0-9558-58cd19a42512" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="a9721926-fd00-46f4-a35a-cdb050985d20" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="14efc96c-a9da-487c-ae1f-220fc10e588f" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="b6d3f11f-a5ba-4e54-8d4e-4790fcb4a613" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
 	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-not-found" doc:id="1784dd0a-c731-499f-b337-0428632c03e3" expectedErrorType="APIKIT:NOT_FOUND" >
+	<munit:test name="natsana-shopify-sapi-main-test-not-found" doc:id="a06ad55c-6fa7-4082-88f4-64981b9f7d04" expectedErrorType="APIKIT:NOT_FOUND">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="a2bb2424-2e4b-474b-83f8-1a315aca108b" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="adee262b-cd85-42e5-a88b-4e6dd78409bd" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="9042b3ef-0c5c-4843-a03f-ae2328e78712" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="4acf9937-6f3d-44f8-aeaa-c74b227ef0f5" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="2af4e9cf-c24b-4478-a4d2-8121aaf8a69e" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="a21d7ce4-6ff0-444a-9d2a-3eefa9223b36" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="7544ab0a-6f77-4e48-bf5b-c63ad5efec99" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="18f77bd9-396b-464c-88fa-047e25b4b49c" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
 	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-method-not-allowed" doc:id="38d21f91-caa7-4fe1-93c7-e7f908beb9a1" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED" >
+	<munit:test name="natsana-shopify-sapi-main-test-method-not-allowed" doc:id="a41d854a-1277-41ce-8412-e80b4b506c67" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="ee2e420e-70c1-4f4e-96e8-6a014777da92" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="1bccabba-5e97-46b6-9cd9-d5e6a39d44a5" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="73d4e428-64a0-4424-a740-beb192a27627" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="d8cab97b-b727-4751-90e8-549b488797aa" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="8116308b-5dfc-45f1-8d51-c737576b5e80" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="b8a2d43b-14fa-404f-ae12-bc56f84081a6" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="f9c006a5-0d56-4661-9d42-421c7a471bf0" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="838c1a6e-cafa-4a26-9d00-2f895932cf81" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
 	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-not-acceptable" doc:id="16feb5a9-96a7-4f93-8925-d277ea01cb5c" expectedErrorType="APIKIT:NOT_ACCEPTABLE" >
+	<munit:test name="natsana-shopify-sapi-main-test-not-acceptable" doc:id="b8024a3f-0d66-4110-9551-73d4dee8182d" expectedErrorType="APIKIT:NOT_ACCEPTABLE">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="d1feb35a-4a00-4732-937c-10ae1c2320c0" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="81ba134a-8595-42bc-986d-a0409e8dd670" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="90ed164f-3551-47c5-b96b-a4d6f3da3d36" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="c876aa52-460c-4ec2-bf64-3e385bf3274a" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="4ec521c1-75e4-4863-9bdf-cdaaed58c7ae" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="d6ce0959-742b-4010-8ca4-26e92768667c" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="09037430-8855-4c45-975f-003eeb9cc7da" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="52034e11-271c-4f64-9b63-c69581cab83a" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
 	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-unsupported-media-type" doc:id="1ae04bf4-be8f-43d9-8b19-c87bea8578cb" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE" >
+	<munit:test name="natsana-shopify-sapi-main-test-unsupported-media-type" doc:id="027f5e18-9ac7-491d-856f-2d49e57dd509" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="520d169b-501a-45d5-9033-0f50a7d93a86" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="46aff708-bed9-4630-ac03-100259638b9f" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="6650aa1a-6e43-44a5-970a-d3123d892c54" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="5033b6f3-5a62-4c5c-95c2-c8b50622b6ad" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="b14c7d3c-2651-430f-866c-bdf1e86bf6d1" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="5214df50-f451-4e86-b588-d6b1dc49873d" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="eb065836-3f76-43a3-bea7-2686d91d2e3a" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="8e8910ab-5827-4ff6-8020-54ec408fa6ea" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
 	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-not-implemented" doc:id="2166a9d6-3c80-4829-8c86-2e0457572b42" expectedErrorType="APIKIT:NOT_IMPLEMENTED" >
+	<munit:test name="natsana-shopify-sapi-main-test-not-implemented" doc:id="7c10ba6c-049f-4d4a-b259-fec2d67995b3" expectedErrorType="APIKIT:NOT_IMPLEMENTED">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="5001874b-e1af-4379-af7d-3cf903d5acdd" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="8f3c0d5a-5fd0-4959-a436-0356f233ea53" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="3593262e-fd81-4040-9dde-22db61dbb00f" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="af2ccf0c-62a0-4c55-91d4-db9a28150554" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="53b8cf79-c438-44b4-9a21-a1f0db79ea5d" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="fc5ff8a1-f201-4347-807c-3cc9f1fe2341" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="dbc618a2-86c3-4d32-b121-2ebeacbf28ce" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="59c52a63-15be-4f9d-9c9b-cf531df7bdd2" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
-	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-connectivity" doc:id="faa0f01c-580b-4886-960a-c1e5e0e59a61" expectedErrorType="HTTP:CONNECTIVITY" >
+	</munit:test><munit:test name="natsana-shopify-sapi-main-test-connectivity" doc:id="decd044a-871f-4069-8eea-975f68b03bb7" expectedErrorType="HTTP:CONNECTIVITY">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="dd38497a-abaf-4c15-8e28-515b8d66bdeb" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="2cd81bb8-cef0-4f5a-be75-aa03fb5f198e" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="HTTP:CONNECTIVITY" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="38c154d4-25be-4328-be5a-216267a9fac4" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="785a9721-9087-4808-9874-3d8540efe8fe" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="9825e252-4768-44a2-9931-98cf24b4091c" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="a8fe6cf7-15df-487e-ac46-5f3f218a390d" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="276daef6-a27b-46bb-ab37-40c1144a0ea6" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="93538c75-204c-4981-831f-e4e1336e98b9" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
-	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-forbidden" doc:id="59e1a1cb-37ca-41e5-b60e-025532c2316c" expectedErrorType="HTTP:FORBIDDEN" >
+	</munit:test><munit:test name="natsana-shopify-sapi-main-test-forbidden" doc:id="0ba57239-ca14-4f26-9980-c5b7ea64b1a3" expectedErrorType="HTTP:FORBIDDEN">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="e4af37bf-871a-426e-b4b0-70879d24e88a" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="36f8bec1-ff40-4be1-8a6d-324c3942d8df" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="HTTP:FORBIDDEN" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="92120c57-8104-4960-a388-e507d8aa1b1e" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="134f82ae-bdbc-42e5-8bc6-f92eac7bd40a" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="ecc565c8-0c72-46ba-b94d-c260f82002a4" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="7c73240d-24e2-4daf-bdd1-b55631f4e995" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="6f8f5e3b-afda-44b1-aae6-2a7a92d184fa" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="021cfed7-1eeb-4190-aea6-0e9279b0b858" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
-	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-service-unavailable" doc:id="05a4c441-8a8b-473d-b3f7-fae19a36d864" expectedErrorType="HTTP:SERVICE_UNAVAILABLE" >
+	</munit:test><munit:test name="natsana-shopify-sapi-main-test-service-unavailable" doc:id="6728da50-3ecd-4cdf-8030-49fb210ce924" expectedErrorType="HTTP:SERVICE_UNAVAILABLE">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="832ac1dd-e9d3-40c3-aaea-4d43101b4be0" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="2d0e1d5a-144c-4496-8a0c-ef636496d691" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="HTTP:SERVICE_UNAVAILABLE" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="a1d90f09-ec8a-428a-ae62-e972e83b7855" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="96f07c77-0e14-41fa-9b2b-2363c8ebc006" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="6a5fafaa-688f-4803-ac1a-df5e6f1c2208" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="42ff0044-26f3-4567-a70a-7ae5791766d5" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="60031140-0fc2-4ffc-b8d1-46b1db2ae8d6" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="eb9f4733-6412-4a6a-aecd-c5fd124e1391" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
-	</munit:test>
-	<munit:test name="natsana-shopify-sapi-main-test-timeout" doc:id="7372b489-d3de-4c27-a99d-26568b8750c4" expectedErrorType="HTTP:TIMEOUT" >
+	</munit:test><munit:test name="natsana-shopify-sapi-main-test-timeout" doc:id="05ae4992-95f4-438b-86f1-fb347300ef6e" expectedErrorType="HTTP:TIMEOUT">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="1f31ad81-0ecf-4ace-8c20-8c3116092122" processor="apikit:router" >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="0a8e5202-1732-43e1-a519-a01a5a09137e" processor="apikit:router">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="240aca92-88b0-4377-a7f1-10529fe46f5a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="7e22d266-11d9-4ef0-a3d7-813d1182fd87" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="HTTP:TIMEOUT" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="targetApiParams" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="errorvar" value="#[readUrl('classpath://natsanashopifysapimaintest1\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="info" value="#[output application/json --- readUrl('classpath://natsanashopifysapimaintest1\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
 				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit:set-event doc:name="Set Input" doc:id="1105e780-7fc5-4ac3-9018-87f2597296bc" >
-				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
-				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest\set-event_attributes.dwl')]" />
+			
+
+
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="91cfa2ee-f6b3-44bc-8af5-18ae6900c8be" >
+				<munit:payload value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://natsanashopifysapimaintest1\set-event_attributes.dwl')]" />
 			</munit:set-event>
 		</munit:behavior>
 		<munit:execution >
-			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="6c665afd-4e96-4445-812f-c73035a4409c" name="natsana-shopify-sapi-main" />
+			<flow-ref doc:name="Flow-ref to natsana-shopify-sapi-main" doc:id="6e8dda84-3d59-4eb9-8688-a4a96c60e6f3" name="natsana-shopify-sapi-main"/>
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert doc:name="Assert payload" doc:id="e88f8be3-b920-46d6-831a-71c63972d312" message="The payload does not match" >
-				<munit-tools:that ><![CDATA[#[payload != null]]]></munit-tools:that>
+			<munit-tools:assert doc:name="Assert payload" doc:id="0835472a-32ec-4b08-98d7-fa64fa3f3983" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import natsanashopifysapimaintest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
 			</munit-tools:assert>
 		</munit:validation>
 	</munit:test>
 	
+
 </mule>

@@ -20,8 +20,8 @@ output application/java
 ---
 {
 	"method": "GET",
-	"path": p('shopify.path.checkouts'),
-	"host" : p('shopify.nl.name'),
+	"path": Mule::p('shopify.path.checkouts'),
+	"host" : Mule::p('shopify.nl.name'),
 	"queryParams" : if(!isEmpty(attributes.queryParams)){
 	(limit : attributes.queryParams.limit)if(!isEmpty(attributes.queryParams.limit)),
 	(updated_at_min : attributes.queryParams.updated_at_min)if(!isEmpty(attributes.queryParams.updated_at_min)),
@@ -50,8 +50,8 @@ output application/java
 ---
 {
 	"method": "GET",
-	"path": p('shopify.path.checkouts'),
-	"host" : p('shopify.ne.name'),
+	"path": Mule::p('shopify.path.checkouts'),
+	"host" : Mule::p('shopify.ne.name'),
 	"queryParams" : if(!isEmpty(attributes.queryParams)){
 	(limit : attributes.queryParams.limit)if(!isEmpty(attributes.queryParams.limit)),
 	(updated_at_min : attributes.queryParams.updated_at_min)if(!isEmpty(attributes.queryParams.updated_at_min)),

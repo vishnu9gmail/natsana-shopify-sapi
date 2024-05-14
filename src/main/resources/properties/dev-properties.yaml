@@ -1,3 +1,10 @@
+api:
+  id: "2196724"
+
+https:
+  host: "0.0.0.0"
+  port: "8082"
+
 healthCheck :
   name: "shopify-sys-api"
   tier: "system api"

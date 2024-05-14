@@ -20,7 +20,7 @@ output application/json
 {
 	correlationId: correlationId default "",
 	apiName: app.name,
-	apiVersion: p('natsana-shopify-sapi.api.version'),
+	apiVersion: Mule::p('natsana-shopify-sapi.api.version'),
 	orgPayload: payload default "",
 	requestPath: attributes.requestPath default ""
 }]]></ee:set-variable>
@@ -30,7 +30,7 @@ output application/json
 		<apikit:router doc:name="APIkit Router" doc:id="7e22d266-11d9-4ef0-a3d7-813d1182fd87" config-ref="natsana-shopify-sapi-config" />
 		<error-handler ref="global_error_handlerError_Handler" />
     </flow>
-    <flow name="get:\products:natsana-shopify-sapi-config">
+    <flow name="get:\product:natsana-shopify-sapi-config" doc:id="19302c62-5c4c-485a-a0b7-2028aa17ac3c">
         <logger level="INFO" message="&quot;---Shopify Sys API: Received Request to Get Products from Shopify---&quot;" doc:name="LOG INFO Request Received" />
         <flow-ref doc:name="Flow Reference to invoke-get-products-shopify-api-common-sub-flow" doc:id="05b28087-600e-47f0-941e-848e75b401cb" name="invoke-get-products-shopify-api-common-sub-flow" />
         <logger level="INFO" doc:name="LOG INFO Exit" doc:id="373e87a1-6237-4552-86a6-06207bd2c0fa" message="&quot;---Shopify Sys API: Received Request to Get Products from Shopify---&quot;" />
@@ -51,7 +51,7 @@ output application/json
             </ee:message>
         </ee:transform>
     </flow>
-    <flow name="get:\checkouts:natsana-shopify-sapi-config">
+    <flow name="get:\checkout:natsana-shopify-sapi-config" doc:id="b433dd6c-56d2-40ed-9702-15b6c3586b34">
 		<logger level="INFO" doc:name="LOG INFO Request Received" doc:id="f31bd7db-6444-4a35-b37c-3c2639179416" message='"---Shopify Sys API: Received Request to Get Checkouts from Shopify---"' />
 		<flow-ref doc:name="Flow Reference to invoke-get-products-shopify-api-common-sub-flow" doc:id="cb24f660-3fff-4cae-b824-769d377227f9" name="invoke-get-checkouts-shopify-api-common-sub-flow" />
 		<logger level="INFO" doc:name="LOG INFO Exit" doc:id="3ffa6513-7d7f-489f-8960-08060d0ad07a" message='"---Shopify Sys API: Received Request to Get Checkouts from Shopify---"' />

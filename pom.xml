@@ -2,20 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mycompany</groupId>
+	<groupId>75f6e0a4-0d0a-4491-8286-c723eb5c018c</groupId>
 	<artifactId>natsana-shopify-sapi</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 
-	<name>natsana-shopify-sapi</name>
+	<name>natsana-shopify-sapi-1</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<app.runtime>4.5.1</app.runtime>
+		<app.runtime>4.4.0-20220321</app.runtime>
+		<mule.version>4.4.0</mule.version>
 		<mule.maven.plugin.version>4.0.0</mule.maven.plugin.version>
-		<munit.version>3.0.0</munit.version>
+		<munit.version>2.3.9</munit.version>
+		<anypoint.username>${ANYPOINT_USERNAME}</anypoint.username>
+		<anypoint.password>${ANYPOINT_PASSWORD}</anypoint.password>
+		<cloudhub.env>${CLOUDHUB_ENV}</cloudhub.env>
+		<anypoint.uri>https://eu1.anypoint.mulesoft.com</anypoint.uri>
+		<encrypt.key>${ENCRYPT_KEY}</encrypt.key>
 	</properties>
 
 	<build>
@@ -30,6 +36,9 @@
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
+				<configuration>
+					<classifier>mule-application</classifier>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.mule.tools.maven</groupId>
@@ -60,6 +69,29 @@
 						<!-- End: SECURED PROPERTIES CI/CD -->
 					</cloudHubDeployment>
 					<classifier>mule-application</classifier>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mulesoft.munit.tools</groupId>
+				<artifactId>munit-maven-plugin</artifactId>
+				<version>${munit.version}</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+							<goal>coverage-report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<coverage>
+						<runCoverage>true</runCoverage>
+						<formats>
+							<format>html</format>
+						</formats>
+					</coverage>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -113,12 +145,13 @@
 		<dependency>
 			<groupId>75f6e0a4-0d0a-4491-8286-c723eb5c018c</groupId>
 			<artifactId>natsana-shopify-sapi</artifactId>
-			<version>1.0.3</version>
+			<version>1.0.6</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
 	</dependencies>
 
+	<!--
 	<repositories>
 		<repository>
 			<id>anypoint-exchange-v3</id>
@@ -130,6 +163,40 @@
 			<id>mulesoft-releases</id>
 			<name>MuleSoft Releases Repository</name>
 			<url>https://repository.mulesoft.org/releases/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+-->
+
+	<repositories>
+		<repository>
+			<id>anypoint-exchange-v3</id>
+			<name>Anypoint Exchange</name>
+			<url>https://maven.eu1.anypoint.mulesoft.com/api/v3/organizations/75f6e0a4-0d0a-4491-8286-c723eb5c018c/maven</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>mulesoft-releases</id>
+			<name>MuleSoft Releases Repository</name>
+			<url>https://repository.mulesoft.org/releases/</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>mule-ee</id>
+			<name>Mule EE Repository</name>
+			<url>https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>artifacts</id>
+			<name>Natsana Artifacts</name>
+			<url>https://maven.eu1.anypoint.mulesoft.com/api/v3/organizations/75f6e0a4-0d0a-4491-8286-c723eb5c018c/maven</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>

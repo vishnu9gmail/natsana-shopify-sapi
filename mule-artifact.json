@@ -1,4 +1,4 @@
 {
-  "minMuleVersion": "4.5.0",
-  "secureProperties": ["secureKey"]
+  "minMuleVersion": "4.4.0",
+  "secureProperties": ["encryptKey", "anypoint.platform.client_secret"]
 }
